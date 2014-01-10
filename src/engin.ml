@@ -20,6 +20,9 @@ object (self)
   val _a_i = altitude_ini
   val mutable _a = altitude_ini
   val mutable _prop : (virt_prop * float) list = []
+  val mutable _debug = false
+  method set_debug d = _debug <- d
+  method get_debug = _debug
   method altitude = _a
   method vitesse = _v
   method gravity_force () =
@@ -61,29 +64,38 @@ object (self)
       let frot = _f#get_force ~vitesse:_v ~rho:(get_rho _a) ()
       and alpha = angle_xy _v
       in
-        (*Printf.printf "Vitesse = %s ; angle = %f ; Frottement = %s\n" (Vecteur.to_string _v)
-          (rad_to_deg alpha) (Vecteur.to_string frot);*)
+        if _debug then
+          Printf.printf "Vitesse = %s ; angle = %f ; Frottement = %s\n" (Vecteur.to_string _v)
+          (rad_to_deg alpha) (Vecteur.to_string frot);
       let primary_forces = add_vv {
             x = ((cos alpha) *. frot.x) +. ((sin alpha) *. frot.y);
             y = ((cos alpha) *. frot.y) +. ((sin alpha) *. frot.x);
             z = frot.z
             } (self#gravity_force ())
+      and add_f pf ((engine : virt_prop), _) =
+        let f_engine = engine#calcul dt in
+        if _debug then
+          Printf.printf "\t%s -- %s\n" engine#shortdesc (Vecteur.to_string f_engine);
+        add_vv pf f_engine
       in
       let forces = List.fold_left
-        (fun pf ((p : virt_prop), _) ->
-          add_vv pf (p#calcul dt))
+        add_f
         primary_forces _prop
       in
-        (*Printf.printf "g = %s\n" (Vecteur.to_string (div_vs (self#gravity_force ()) _m));
-        Printf.printf "Toutes les forces : %s\n" (Vecteur.to_string forces);*)
+        if _debug then begin
+          Printf.printf "g = %s\n" (Vecteur.to_string (div_vs (self#gravity_force ()) _m));
+          Printf.printf "Toutes les forces : %s\n" (Vecteur.to_string forces)
+        end;
       let a = mult_sv dt (div_vs forces (self#get_masse ())) in
-        (*Printf.printf "Accélération résultante : %s\n" (Vecteur.to_string a);*)
+        if _debug then
+          Printf.printf "Accélération résultante : %s\n" (Vecteur.to_string a);
         _a <- _a +. (_v.z *. dt);
         _v <- add_vv _v a
     end
 end
 and virtual virt_prop () =
   object
+    val mutable _shortdesc = "virt_prop"
     method virtual set_power : float -> unit
     (* Set the engine power it must be a percentage !! *)
     method virtual get_power : unit -> float
@@ -93,6 +105,7 @@ and virtual virt_prop () =
      *  - premier argument est le temps de calcul pour cette étape de calcul
      *  - deuxième argument est l'engin sur lequel la force est appliquée
      *)
+    method shortdesc = _shortdesc
   end
 ;;
 

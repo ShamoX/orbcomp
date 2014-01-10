@@ -3,6 +3,7 @@ open Vecteur
 
 class virtual virt_prop : unit ->
   object ('a)
+    val mutable _shortdesc : string
     method virtual set_power : float -> unit
     (* Set the engine power it must be a percentage !! *)
     method virtual get_power : unit -> float
@@ -12,12 +13,15 @@ class virtual virt_prop : unit ->
      *  - premier argument est le temps de calcul pour cette étape de calcul
      *  - deuxième argument est l'engin sur lequel la force est appliquée
      *)
+    method shortdesc : string
   end
 
 class engin : masse:float -> vitesse_ini:Vecteur.vecteur -> altitude_ini:float ->
   coef_traine:float -> coef_derive:float -> coef_portance:float ->
     surface_v:float -> surface_l:float -> unit ->
 object ('a)
+  method get_debug : bool
+  method set_debug : bool -> unit
   method altitude : float
   method vitesse : Vecteur.vecteur
   method gravity_force : unit -> Vecteur.vecteur

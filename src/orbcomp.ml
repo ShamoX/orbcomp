@@ -16,9 +16,11 @@ and c_t = ref (-.0.1) and c_d = ref 0.0 and c_p = ref 0.0
 and s_v = ref 1.0 and s_l = ref 1.0
 and pas_incr = ref 0.01
 and temps_total = ref 100.0
+and debug = ref false
 ;;
 
 Arg.parse [
+  ("-d", Arg.Unit(fun () -> debug := true), "Set debug mode on.");
   ("--masse",Arg.Set_float(masse_v),sprintf "Object masse in kg (default %f kg)" !masse_v);
   ("--vitesse_ini",Arg.Tuple(
       [Arg.Set_float(v_ini_x);Arg.Set_float(v_ini_y);Arg.Set_float(v_ini_z)]),
@@ -36,7 +38,9 @@ let vaisseau = new engin ~masse:!masse_v ~coef_traine:!c_t ~coef_derive:!c_d ~co
 and cur_time = ref 0.0 in
 let engine = new snecma_vulcain2 vaisseau ()
 in
+vaisseau#set_debug !debug;
 vaisseau#add_engine engine 30000.0;
+engine#set_power 100.;
 printf "Starting simulation for %.3f seconds ; computation step : %f seconds\n" !temps_total !pas_incr;
 printf "\n%.3f %.0f %.0f" !cur_time vaisseau#altitude (norm vaisseau#vitesse);
 while !cur_time < !temps_total do
