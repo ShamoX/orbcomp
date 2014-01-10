@@ -3,10 +3,13 @@
  *****************************************************************************)
 
 type vecteur = {x : float ; y : float ; z : float }
+type orientation = {xy : float ; yz: float ; xz: float}
 
 let norm v = sqrt ((v.x *. v.x) +. (v.y *. v.y) +. (v.z *. v.z))
 and norm_sq v = (v.x *. v.x) +. (v.y *. v.y) +. (v.z *. v.z)
 and angle_xy v = (atan2 v.y v.x)
+and angle_xz v = (atan2 v.x v.z)
+and angle_yz v = (atan2 v.y v.z)
 and angle_yx v = (atan2 v.x v.y)
 and to_string v = Printf.sprintf "(%f,%f,%f)" v.x v.y v.z
 ;;

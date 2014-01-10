@@ -12,8 +12,8 @@ OCAMLOPTFLAGS=$(INCLUDES) $(LIBSOPT) # add other options for ocamlopt here
 
 PROJECT=orbcomp
 
-OBJECTSOBJ=vecteur.cmx constantes.cmx atmosphere_nor.cmx frottement.cmx engin.cmx
-OBJECTS=vecteur.cmo constantes.cmo atmosphere_nor.cmo frottement.cmo engin.cmo
+OBJECTSOBJ=vecteur.cmx constantes.cmx atmosphere_nor.cmx frottement.cmx engin.cmx engine_model.cmx
+OBJECTS=vecteur.cmo constantes.cmo atmosphere_nor.cmo frottement.cmo engin.cmo engine_model.cmo
 
 all: depend $(PROJECT)
 

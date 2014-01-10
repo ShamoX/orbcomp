@@ -1,6 +1,7 @@
 open Printf
 open Vecteur
 open Engin
+open Engine_model
 ;;
 
 
@@ -32,8 +33,10 @@ Arg.parse [
 let v_ini = {x = !v_ini_x ; y = !v_ini_y ; z = !v_ini_z} in
 let vaisseau = new engin ~masse:!masse_v ~coef_traine:!c_t ~coef_derive:!c_d ~coef_portance:!c_p
           ~surface_v:!s_v ~surface_l:!s_l ~vitesse_ini:v_ini ~altitude_ini:!a_ini ()
-and cur_time = ref 0.0
+and cur_time = ref 0.0 in
+let engine = new snecma_vulcain2 vaisseau ()
 in
+vaisseau#add_engine engine 30000.0;
 printf "Starting simulation for %.3f seconds ; computation step : %f seconds\n" !temps_total !pas_incr;
 printf "\n%.3f %.0f %.0f" !cur_time vaisseau#altitude (norm vaisseau#vitesse);
 while !cur_time < !temps_total do
