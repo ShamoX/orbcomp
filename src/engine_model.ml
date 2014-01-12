@@ -6,7 +6,7 @@ class snecma_vulcain2 engin () =
   object (self)
     inherit virt_prop ()
     val _e = engin
-    val mutable _power = 8000000.0 (* in Newton *)
+    val mutable _power = 1340000.0 (* in Newton *)
     val mutable _consumption = 360.0 (* kg/s *)
     val mutable _on = false
     initializer
